@@ -18,10 +18,14 @@ import json
 import os
 
 import flask
+from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_seasurf import SeaSurf
 
 import macro
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = flask.Flask(__name__)
 CORS(app)

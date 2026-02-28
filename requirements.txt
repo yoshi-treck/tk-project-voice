@@ -4,3 +4,4 @@ flask-seasurf
 google-genai
 gunicorn
 jinja2
+python-dotenv
