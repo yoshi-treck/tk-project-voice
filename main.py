@@ -25,7 +25,7 @@ from flask_seasurf import SeaSurf
 import macro
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 app = flask.Flask(__name__)
 CORS(app)
