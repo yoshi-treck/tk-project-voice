@@ -64,15 +64,11 @@ def RunMacro():
 # Register the blueprint
 app.register_blueprint(voice_bp)
 
-# Redirect root to BASE_PATH for convenience
-# Disabled on Vercel to prevent redirect loops when using rewrites
+# No redirect at root to prevent Vercel loops.
+# Vercel rewrites will handle mapping / and /voice to the app.
 @app.route('/')
 def IndexRedirect():
-    # If we are NOT on Vercel (local dev), we might still want this.
-    # But for now, let's keep it simple and just return the root or redirect only if not at BASE_PATH
-    if flask.request.path == BASE_PATH or flask.request.path == f'{BASE_PATH}/':
-        return Root()
-    return flask.redirect(f'{BASE_PATH}/')
+    return Root()
 
 # Error handler to ensure JSON response for API subpath
 @app.errorhandler(403)
