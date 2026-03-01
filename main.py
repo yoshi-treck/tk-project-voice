@@ -31,6 +31,7 @@ if not BASE_PATH.startswith('/'):
     BASE_PATH = '/' + BASE_PATH
 
 app = flask.Flask(__name__, static_url_path=f'{BASE_PATH}/static')
+app.config['APPLICATION_ROOT'] = BASE_PATH
 CORS(app)
 csrf = SeaSurf(app)
 app.secret_key = os.environ.get('SECRET_KEY') or 'localkey'
