@@ -43,7 +43,7 @@ app.secret_key = os.environ.get('SECRET_KEY') or 'localkey'
 # Define blueprint for the subpath
 voice_bp = flask.Blueprint('voice', __name__, url_prefix=BASE_PATH)
 
-@voice_bp.route('/')
+@voice_bp.route('/', strict_slashes=False)
 def Root():
   return flask.make_response(flask.render_template('index.jinja'))
 
