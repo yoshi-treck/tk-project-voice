@@ -72,15 +72,12 @@ def RunGeminiMacro(model_id, prompt, temperature, language):
         ),
     )
     # Log raw response for debugging in Vercel logs
-    print(f"DEBUG: Gemini Response: {response}")
     
     if not response or not hasattr(response, 'text') or not response.text:
-      print(f"DEBUG: Empty response or no text attribute. Response: {response}")
       return json.dumps({'messages': [], 'debug_error': 'Empty response from Gemini'})
 
     text = response.text
   except Exception as e:
-    print(f"DEBUG: Exception during generate_content: {e}")
     return json.dumps({'messages': [], 'debug_error': str(e)})
 
   # Quick hack to remove highlights from response. All '*' are removed even
