@@ -63,6 +63,11 @@ def RunMacro():
 # Register the blueprint
 app.register_blueprint(voice_bp)
 
+# Root path returns a simple message to direct users to /voice/
+@app.route('/')
+def IndexRedirect():
+    return "Project VOICE is running at <a href='/voice/'>/voice/</a>", 404
+
 # Error handler to ensure JSON response for API subpath
 @app.errorhandler(403)
 def forbidden(e):
