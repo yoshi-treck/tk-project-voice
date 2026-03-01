@@ -48,7 +48,7 @@ voice_bp = flask.Blueprint('voice', __name__, url_prefix=BASE_PATH)
 def Root():
   return flask.make_response(flask.render_template('index.jinja'))
 
-@voice_bp.route('/run-macro', methods=['POST'])
+@voice_bp.route('/run-macro', methods=['POST'], strict_slashes=False)
 def RunMacro():
   try:
     request = flask.request
