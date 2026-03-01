@@ -5,12 +5,18 @@
             "destination": "/static/$1"
         },
         {
+            "source": "/voice",
+            "destination": "/main.py"
+        },
+        {
             "source": "/voice/(.*)",
             "destination": "/main.py"
         },
         {
-            "source": "/(.*)",
+            "source": "/",
             "destination": "/main.py"
         }
-    ]
+    ],
+    "cleanUrls": true,
+    "trailingSlash": true
 }

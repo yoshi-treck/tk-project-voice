@@ -25,15 +25,18 @@ from flask_seasurf import SeaSurf
 import macro
 
 # Load environment variables from .env file
-load_dotenv(override=True)
+# Base path configuration for subpath deployment
+BASE_PATH = os.environ.get('BASE_PATH', '/voice').rstrip('/')
+if not BASE_PATH.startswith('/'):
+    BASE_PATH = '/' + BASE_PATH
 
-app = flask.Flask(__name__, static_url_path='/voice/static')
+app = flask.Flask(__name__, static_url_path=f'{BASE_PATH}/static')
 CORS(app)
 csrf = SeaSurf(app)
 app.secret_key = os.environ.get('SECRET_KEY') or 'localkey'
 
-# Define blueprint for the /voice subpath
-voice_bp = flask.Blueprint('voice', __name__, url_prefix='/voice')
+# Define blueprint for the subpath
+voice_bp = flask.Blueprint('voice', __name__, url_prefix=BASE_PATH)
 
 @voice_bp.route('/')
 def Root():
@@ -52,10 +55,10 @@ def RunMacro():
 # Register the blueprint
 app.register_blueprint(voice_bp)
 
-# Redirect root to /voice/ for convenience
+# Redirect root to BASE_PATH for convenience
 @app.route('/')
 def IndexRedirect():
-    return flask.redirect('/voice/')
+    return flask.redirect(f'{BASE_PATH}/')
 
 if __name__ == '__main__':
   app.run(debug=True, host=os.environ.get('FLASK_HOST', '127.0.0.1'))
