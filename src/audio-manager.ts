@@ -24,7 +24,7 @@ let clickBuffer: AudioBuffer | null = null;
 let chimeBuffer: AudioBuffer | null = null;
 const ctx = new (window.AudioContext || window.webkitAudioContext)();
 
-fetch('/static/click2.wav')
+fetch('static/click2.wav')
   .then(response => response.arrayBuffer())
   .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
   .then(audioBuffer => {
@@ -34,7 +34,7 @@ fetch('/static/click2.wav')
     console.warn('Error loading click audio file:', error);
   });
 
-fetch('/static/chime.wav')
+fetch('static/chime.wav')
   .then(response => response.arrayBuffer())
   .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
   .then(audioBuffer => {

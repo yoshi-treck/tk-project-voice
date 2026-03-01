@@ -1,0 +1,16 @@
+{
+    "rewrites": [
+        {
+            "source": "/voice/static/(.*)",
+            "destination": "/static/$1"
+        },
+        {
+            "source": "/voice/(.*)",
+            "destination": "/main.py"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/main.py"
+        }
+    ]
+}

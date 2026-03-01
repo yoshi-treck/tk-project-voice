@@ -2442,7 +2442,7 @@
   ], MdCircularProgress);
 
   // src/constants.ts
-  var RUN_MACRO_ENDPOINT_URL = "/run-macro";
+  var RUN_MACRO_ENDPOINT_URL = "run-macro";
   var CONFIG_DEFAULT = {
     aiConfig: "smart",
     checkedLanguages: [],
@@ -11846,12 +11846,12 @@
   var clickBuffer = null;
   var chimeBuffer = null;
   var ctx = new (window.AudioContext || window.webkitAudioContext)();
-  fetch("/static/click2.wav").then((response) => response.arrayBuffer()).then((arrayBuffer) => ctx.decodeAudioData(arrayBuffer)).then((audioBuffer) => {
+  fetch("static/click2.wav").then((response) => response.arrayBuffer()).then((arrayBuffer) => ctx.decodeAudioData(arrayBuffer)).then((audioBuffer) => {
     clickBuffer = audioBuffer;
   }).catch((error) => {
     console.warn("Error loading click audio file:", error);
   });
-  fetch("/static/chime.wav").then((response) => response.arrayBuffer()).then((arrayBuffer) => ctx.decodeAudioData(arrayBuffer)).then((audioBuffer) => {
+  fetch("static/chime.wav").then((response) => response.arrayBuffer()).then((arrayBuffer) => ctx.decodeAudioData(arrayBuffer)).then((audioBuffer) => {
     chimeBuffer = audioBuffer;
   }).catch((error) => {
     console.warn("Error loading chime audio file:", error);

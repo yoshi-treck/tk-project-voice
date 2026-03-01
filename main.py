@@ -27,18 +27,19 @@ import macro
 # Load environment variables from .env file
 load_dotenv(override=True)
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_url_path='/voice/static')
 CORS(app)
 csrf = SeaSurf(app)
 app.secret_key = os.environ.get('SECRET_KEY') or 'localkey'
 
+# Define blueprint for the /voice subpath
+voice_bp = flask.Blueprint('voice', __name__, url_prefix='/voice')
 
-@app.route('/')
+@voice_bp.route('/')
 def Root():
   return flask.make_response(flask.render_template('index.jinja'))
 
-
-@app.route('/run-macro', methods=['POST'])
+@voice_bp.route('/run-macro', methods=['POST'])
 def RunMacro():
   request = flask.request
   macro_id = request.form.get('id')
@@ -48,6 +49,13 @@ def RunMacro():
 
   return macro.RunMacro(macro_id, user_inputs, temperature, model_id)
 
+# Register the blueprint
+app.register_blueprint(voice_bp)
+
+# Redirect root to /voice/ for convenience
+@app.route('/')
+def IndexRedirect():
+    return flask.redirect('/voice/')
 
 if __name__ == '__main__':
   app.run(debug=True, host=os.environ.get('FLASK_HOST', '127.0.0.1'))
