@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {RUN_MACRO_ENDPOINT_URL} from './constants.js';
+import { RUN_MACRO_ENDPOINT_URL } from './constants.js';
 
 /**
  * Extracts suggestions from a response from LLM.
@@ -107,7 +107,8 @@ export class MacroApiClient {
       if (err instanceof DOMException) {
         console.log('Request was aborted by user:', userInputs);
       } else {
-        alert(`Failed to access Gemini server or ${err || 'something'}.`);
+        const detail = (err as any)?.debug_error || err || 'something';
+        alert(`Failed to access Gemini server or ${detail}.`);
       }
       return null;
     });
@@ -116,7 +117,7 @@ export class MacroApiClient {
   }
 
   private static async fetchSuggestion(
-    userInputs: {[key: string]: string},
+    userInputs: { [key: string]: string },
     abortSignal: AbortSignal,
     macroId: string,
     model: string,
@@ -142,7 +143,7 @@ export class MacroApiClient {
    * @returns A promise for a response text
    */
   public static async fetchMacro(
-    userInputs: {[key: string]: string},
+    userInputs: { [key: string]: string },
     abortSignal: AbortSignal | null,
     macroId: string,
     model: string,
@@ -176,4 +177,4 @@ export class MacroApiClient {
   }
 }
 
-export const TEST_ONLY = {parseResponse};
+export const TEST_ONLY = { parseResponse };

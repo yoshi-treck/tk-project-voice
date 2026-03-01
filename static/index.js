@@ -2519,7 +2519,8 @@
         if (err instanceof DOMException) {
           console.log("Request was aborted by user:", userInputs);
         } else {
-          alert(`Failed to access Gemini server or ${err || "something"}.`);
+          const detail = err?.debug_error || err || "something";
+          alert(`Failed to access Gemini server or ${detail}.`);
         }
         return null;
       });

@@ -53,25 +53,36 @@ def RunGeminiMacro(model_id, prompt, temperature, language):
   thinking_config = None
   if model_id.startswith('gemini-2.5-'):
     thinking_config = types.ThinkingConfig(thinking_budget=0)
-  response = client.models.generate_content(
-      model=model_id,
-      contents=prompt,
-      config=types.GenerateContentConfig(
-          temperature=temperature,
-          top_p=0.5,
-          safety_settings=[
-              types.SafetySetting(
-                  category='HARM_CATEGORY_HATE_SPEECH', threshold='BLOCK_NONE'),
-              types.SafetySetting(
-                  category='HARM_CATEGORY_SEXUALLY_EXPLICIT',
-                  threshold='BLOCK_NONE'),
-          ],
-          thinking_config=thinking_config,
-      ),
-  )
-  if not response.text:
-    return json.dumps({'messages': []})
-  text = response.text
+  
+  try:
+    response = client.models.generate_content(
+        model=model_id,
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            temperature=temperature,
+            top_p=0.5,
+            safety_settings=[
+                types.SafetySetting(
+                    category='HARM_CATEGORY_HATE_SPEECH', threshold='BLOCK_NONE'),
+                types.SafetySetting(
+                    category='HARM_CATEGORY_SEXUALLY_EXPLICIT',
+                    threshold='BLOCK_NONE'),
+            ],
+            thinking_config=thinking_config,
+        ),
+    )
+    # Log raw response for debugging in Vercel logs
+    print(f"DEBUG: Gemini Response: {response}")
+    
+    if not response or not hasattr(response, 'text') or not response.text:
+      print(f"DEBUG: Empty response or no text attribute. Response: {response}")
+      return json.dumps({'messages': [], 'debug_error': 'Empty response from Gemini'})
+
+    text = response.text
+  except Exception as e:
+    print(f"DEBUG: Exception during generate_content: {e}")
+    return json.dumps({'messages': [], 'debug_error': str(e)})
+
   # Quick hack to remove highlights from response. All '*' are removed even
   # if they are not highlights.
   text = text.replace('*', '')
