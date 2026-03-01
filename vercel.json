@@ -5,19 +5,11 @@
             "destination": "/static/$1"
         },
         {
-            "source": "/voice/run-macro",
+            "source": "/voice/(.*)",
             "destination": "/main.py"
         },
         {
             "source": "/voice",
-            "destination": "/main.py"
-        },
-        {
-            "source": "/voice/",
-            "destination": "/main.py"
-        },
-        {
-            "source": "/voice/(.*)",
             "destination": "/main.py"
         },
         {
