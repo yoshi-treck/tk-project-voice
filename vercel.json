@@ -1,22 +1,8 @@
 {
     "rewrites": [
         {
-            "source": "/voice/static/(.*)",
-            "destination": "/static/$1"
-        },
-        {
-            "source": "/voice",
-            "destination": "/main.py"
-        },
-        {
-            "source": "/voice/",
-            "destination": "/main.py"
-        },
-        {
-            "source": "/voice/(.*)",
+            "source": "/(.*)",
             "destination": "/main.py"
         }
-    ],
-    "cleanUrls": false,
-    "trailingSlash": false
+    ]
 }

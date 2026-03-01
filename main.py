@@ -27,27 +27,17 @@ import macro
 # Load environment variables from .env file
 load_dotenv(override=True)
 
-# Base path configuration for subpath deployment
-BASE_PATH = os.environ.get('BASE_PATH', '/voice').rstrip('/')
-if not BASE_PATH.startswith('/'):
-    BASE_PATH = '/' + BASE_PATH
-
-app = flask.Flask(__name__, static_url_path=f'{BASE_PATH}/static')
-app.config['SESSION_COOKIE_PATH'] = BASE_PATH
-app.config['CSRF_COOKIE_PATH'] = BASE_PATH
+app = flask.Flask(__name__)
 
 CORS(app)
 csrf = SeaSurf(app)
 app.secret_key = os.environ.get('SECRET_KEY') or 'localkey'
 
-# Define blueprint for the subpath
-voice_bp = flask.Blueprint('voice', __name__, url_prefix=BASE_PATH)
-
-@voice_bp.route('/', strict_slashes=False)
+@app.route('/')
 def Root():
   return flask.make_response(flask.render_template('index.jinja'))
 
-@voice_bp.route('/run-macro', methods=['POST'], strict_slashes=False)
+@app.route('/run-macro', methods=['POST'], strict_slashes=False)
 def RunMacro():
   try:
     request = flask.request
@@ -60,24 +50,14 @@ def RunMacro():
   except Exception as e:
     return flask.jsonify({"error": str(e)}), 500
 
-# Register the blueprint
-app.register_blueprint(voice_bp)
-
-# Root path returns a simple message to direct users to /voice/
-@app.route('/')
-def IndexRedirect():
-    return "Project VOICE is running at <a href='/voice/'>/voice/</a>", 404
-
-# Error handler to ensure JSON response for API subpath
+# Error handler to ensure JSON response for API
 @app.errorhandler(403)
 def forbidden(e):
     return flask.jsonify(error="Forbidden (CSRF?)", details=str(e)), 403
 
 @app.errorhandler(404)
 def page_not_found(e):
-    if flask.request.path.startswith(f'{BASE_PATH}/'):
-        return flask.jsonify(error="Not Found", path=flask.request.path), 404
-    return e
+    return flask.jsonify(error="Not Found", path=flask.request.path), 404
 
 if __name__ == '__main__':
   app.run(debug=True, host=os.environ.get('FLASK_HOST', '127.0.0.1'))
