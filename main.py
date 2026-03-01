@@ -64,8 +64,7 @@ def RunMacro():
 # Register the blueprint
 app.register_blueprint(voice_bp)
 
-# No redirect at root to prevent Vercel loops.
-# Vercel rewrites will handle mapping / and /voice to the app.
+# Root path directly returns the app, no redirect to subpath.
 @app.route('/')
 def IndexRedirect():
     return Root()
