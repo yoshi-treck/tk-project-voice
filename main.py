@@ -33,7 +33,6 @@ if not BASE_PATH.startswith('/'):
     BASE_PATH = '/' + BASE_PATH
 
 app = flask.Flask(__name__, static_url_path=f'{BASE_PATH}/static')
-app.config['APPLICATION_ROOT'] = BASE_PATH
 app.config['SESSION_COOKIE_PATH'] = BASE_PATH
 app.config['CSRF_COOKIE_PATH'] = BASE_PATH
 
@@ -63,11 +62,6 @@ def RunMacro():
 
 # Register the blueprint
 app.register_blueprint(voice_bp)
-
-# Root path directly returns the app, no redirect to subpath.
-@app.route('/')
-def IndexRedirect():
-    return Root()
 
 # Error handler to ensure JSON response for API subpath
 @app.errorhandler(403)

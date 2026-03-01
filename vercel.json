@@ -15,10 +15,6 @@
         {
             "source": "/voice/(.*)",
             "destination": "/main.py"
-        },
-        {
-            "source": "/",
-            "destination": "/main.py"
         }
     ],
     "cleanUrls": false,
