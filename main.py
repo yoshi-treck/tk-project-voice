@@ -25,6 +25,8 @@ from flask_seasurf import SeaSurf
 import macro
 
 # Load environment variables from .env file
+load_dotenv(override=True)
+
 # Base path configuration for subpath deployment
 BASE_PATH = os.environ.get('BASE_PATH', '/voice').rstrip('/')
 if not BASE_PATH.startswith('/'):
@@ -32,6 +34,9 @@ if not BASE_PATH.startswith('/'):
 
 app = flask.Flask(__name__, static_url_path=f'{BASE_PATH}/static')
 app.config['APPLICATION_ROOT'] = BASE_PATH
+app.config['SESSION_COOKIE_PATH'] = BASE_PATH
+app.config['CSRF_COOKIE_PATH'] = BASE_PATH
+
 CORS(app)
 csrf = SeaSurf(app)
 app.secret_key = os.environ.get('SECRET_KEY') or 'localkey'
@@ -45,13 +50,16 @@ def Root():
 
 @voice_bp.route('/run-macro', methods=['POST'])
 def RunMacro():
-  request = flask.request
-  macro_id = request.form.get('id')
-  user_inputs = json.loads(request.form.get('userInputs'))
-  temperature = float(request.form.get('temperature'))
-  model_id = request.form.get('model_id')
+  try:
+    request = flask.request
+    macro_id = request.form.get('id')
+    user_inputs = json.loads(request.form.get('userInputs'))
+    temperature = float(request.form.get('temperature'))
+    model_id = request.form.get('model_id')
 
-  return macro.RunMacro(macro_id, user_inputs, temperature, model_id)
+    return macro.RunMacro(macro_id, user_inputs, temperature, model_id)
+  except Exception as e:
+    return flask.jsonify({"error": str(e)}), 500
 
 # Register the blueprint
 app.register_blueprint(voice_bp)
@@ -60,6 +68,17 @@ app.register_blueprint(voice_bp)
 @app.route('/')
 def IndexRedirect():
     return flask.redirect(f'{BASE_PATH}/')
+
+# Error handler to ensure JSON response for API subpath
+@app.errorhandler(403)
+def forbidden(e):
+    return flask.jsonify(error="Forbidden (CSRF?)", details=str(e)), 403
+
+@app.errorhandler(404)
+def page_not_found(e):
+    if flask.request.path.startswith(f'{BASE_PATH}/'):
+        return flask.jsonify(error="Not Found", path=flask.request.path), 404
+    return e
 
 if __name__ == '__main__':
   app.run(debug=True, host=os.environ.get('FLASK_HOST', '127.0.0.1'))
