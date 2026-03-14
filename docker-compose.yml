@@ -1,0 +1,16 @@
+name: project-voice
+
+services:
+  voice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: project-voice:latest
+    container_name: project-voice
+    ports:
+      - "${PORT:-5001}:${PORT:-5001}"
+    env_file:
+      - .env
+    environment:
+      - FLASK_HOST=0.0.0.0
+    restart: unless-stopped

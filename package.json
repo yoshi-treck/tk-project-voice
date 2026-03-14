@@ -17,7 +17,7 @@
     "test": "concurrently \"npm run test:js\" \"cross-env PYTHONPATH=. pytest -vv\"",
     "deploy": "npm run build && gcloud app deploy app.yaml --no-promote",
     "postinstall": "python -m pip install -r requirements.txt && python -m pip install -r requirements-dev.txt",
-    "storybook": "storybook dev -p 6006"
+    "storybook": "storybook dev -p ${PORT:-5001}"
   },
   "license": "Apache-2.0",
   "engines": {
